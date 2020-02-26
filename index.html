@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>mv-form</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/meveo-org/mv-theme@master/css/meveo-theme.css"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://front.meveo.org/images/favicon.ico"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/gh/meveo-org/mv-dependencies@master/es-module-shims/es-module-shims.min.js"
+    ></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "lit-element": "https://cdn.jsdelivr.net/gh/meveo-org/mv-dependencies@master/lit-element.js",
+          "jsonata": "https://cdn.jsdelivr.net/gh/meveo-org/mv-dependencies@master/jsonata.min.js",
+          "ajv": "https://cdn.jsdelivr.net/gh/meveo-org/mv-dependencies@master/ajv/ajv.min.js",
+          "mv-element": "https://cdn.jsdelivr.net/gh/meveo-org/mv-modules@master/mv-element.js",
+          "mv-store": "https://cdn.jsdelivr.net/gh/meveo-org/mv-modules@master/mv-store.js",
+          "mv-button": "https://cdn.jsdelivr.net/gh/meveo-org/mv-button@master/mv-button.js",
+          "mv-container": "https://cdn.jsdelivr.net/gh/meveo-org/mv-container@master/mv-container.js",
+          "mv-input": "https://cdn.jsdelivr.net/gh/meveo-org/mv-input@master/mv-input.js",
+          "mv-tags": "https://cdn.jsdelivr.net/gh/meveo-org/mv-tags@master/mv-tags.js"
+        }
+      }
+    </script>
+    <script type="module-shim" src="./demo.js"></script>
+  </head>
+
+  <body>
+    <h1>MvForm Demo</h1>
+    <mv-form-demo name="mv-form-demo" storage-modes="local"></mv-form-demo>
+  </body>
+</html>
