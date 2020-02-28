@@ -1,11 +1,11 @@
 import { LitElement, html, css } from "lit-element";
+import { changeField } from "./utils/index.js";
 
-export class MvFormField extends LitElement {
+export class MvFormGroup extends LitElement {
   static get properties() {
     return {
-      name: {type: String},
-      label: {type: String},
-      value: {type: Object}
+      name: { type: String },
+      values: { type: Object }
     };
   }
 
@@ -18,25 +18,31 @@ export class MvFormField extends LitElement {
   }
 
   render() {
-    const value = this.value || "";
     return html`
-      <div class="mv-form-field">
-        <div class="label" @click="${this.clickLabel}">
-          <slot name="label">
-            <label>${this.label}</label>
-          </slot>
+      <div class="mv-form-group">
+        <div class="form-group">
+          <slot></slot>
         </div>
-        <div class="field">
-          <slot>
-            <input value="${value}" />
-          </slot>
-        </div>
-      </div>      
+      </div>
     `;
   }
 
-  clickLabel = () => {}
+  connectedCallback() {
+    this.addEventListener("change-group-field", this.changeGroupField);
+    super.connectedCallback();
+  }
 
+  changeGroupField = event => {
+    const { detail } = event;
+    const { name, value, index, element } = detail;
+    const currentValue = this.values[index];
+    const values = [
+      ...this.values.slice(0, index),
+      { ...currentValue, [name]: value },
+      ...this.values.slice(index + 1)
+    ];
+    changeField(element, { name: this.name, value: values });
+  };
 }
 
-customElements.define("mv-form-field", MvFormField);
+customElements.define("mv-form-group", MvFormGroup);

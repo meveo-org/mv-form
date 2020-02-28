@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit-element";
-import { changeField } from "./utils/index.js";
+import { changeField, changeGroupField } from "./utils/index.js";
 import "mv-input";
 
 export class MvFormField extends LitElement {
@@ -10,7 +10,9 @@ export class MvFormField extends LitElement {
       value: { type: Object },
       placeholder: { type: String },
       error: { type: String },
-      required: { type: Boolean },
+      item: { type: Boolean },
+      index: { type: Number },
+      required: { type: Boolean, attribute: true, reflect: true },
       labelPosition: {
         type: String,
         attribute: "label-position",
@@ -23,6 +25,8 @@ export class MvFormField extends LitElement {
     return css`
       .label {
         grid-area: label;
+        width: var(--mv-form-field-label-width, 20px);
+        white-space: nowrap;
       }
       .label .default-label,
       .label ::slotted(*) {
@@ -52,7 +56,7 @@ export class MvFormField extends LitElement {
       }
       .mv-form-field {
         display: grid;
-        grid-gap: 5px 10px;
+        grid-gap: 5px 20px;
         margin: 10px;
         align-items: center;
       }
@@ -88,7 +92,7 @@ export class MvFormField extends LitElement {
     this.value = "";
     this.placeholder = "";
     this.error = "";
-    this.required = true;
+    this.required = false;
     this.labelPosition = "left";
   }
 
@@ -97,17 +101,17 @@ export class MvFormField extends LitElement {
     const hasError = !!this.error;
     return html`
       <div class="mv-form-field label-${this.labelPosition}">
-        <div class="label" @click="${this.clickLabel}">
+        <div class="label">
           <slot name="label">
             <label class="default-label">
               ${this.label}
-              ${this.required
-                ? html`
-                    <i class="required">*</i>
-                  `
-                : html``}
             </label>
           </slot>
+          ${this.required
+            ? html`
+                <i class="required">*</i>
+              `
+            : html``}
         </div>
         <div class="field">
           <slot name="field">
@@ -130,10 +134,20 @@ export class MvFormField extends LitElement {
     `;
   }
 
-  clickLabel = () => {};
-
   changeValue = event => {
-    changeField(event.target, event.detail);
+    if (this.item) {
+      changeGroupField(
+        event.target,
+        { ...event.detail, name: this.name, originalEvent: event },
+        this.index
+      );
+    } else {
+      changeField(event.target, {
+        ...event.detail,
+        name: this.name,
+        originalEvent: event
+      });
+    }
   };
 }
 

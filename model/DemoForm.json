@@ -49,14 +49,6 @@
         }
       }
     },
-    "tags": {
-      "type": "array",
-      "title": "Tags",
-      "items": {
-        "type": "string",
-        "title": "Tags"
-      }
-    },
     "remarks": {
       "type": "string",
       "minLength": 1,
