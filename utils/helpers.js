@@ -17,3 +17,17 @@ export const changeGroupField = (element, field, index) => {
     })
   );
 };
+
+export const clearForm = event => {
+  const {target} = event;
+  (target || event).dispatchEvent(
+    new CustomEvent("clear-form", { bubbles: true, composed: true })
+  );
+};
+
+export const submitForm = event => {
+  const {target} = event;
+  (target || event).dispatchEvent(
+    new CustomEvent("submit-form", { bubbles: true, composed: true })
+  );
+};

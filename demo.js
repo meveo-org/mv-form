@@ -1,11 +1,19 @@
 import { html, css } from "lit-element";
 import { MvElement } from "mv-element";
-import { changeField, changeGroupField } from "./utils/index.js";
+import {
+  changeField,
+  changeGroupField,
+  submitForm,
+  clearForm,
+  matchError
+} from "./utils/index.js";
 import "mv-container";
 import "mv-input";
 import "./mv-form.js";
 import "./mv-form-field.js";
 import "./mv-form-group.js";
+
+import schema from "./model/DemoForm.json";
 
 const EMPTY_LOCATION = {
   streetAddress: "",
@@ -92,12 +100,13 @@ export class MvFormDemo extends MvElement {
   render() {
     return html`
       <mv-container>
-        <mv-form .store="${this.store}">
+        <mv-form .store="${this.store}" .schema="${schema}">
           <mv-form-field
             name="firstName"
             label="First name"
             placeholder="Enter first name here..."
             .value="${this.firstName}"
+            .error="${matchError(this.errors, "firstName")}"
             required
           ></mv-form-field>
           <mv-form-field
@@ -105,9 +114,14 @@ export class MvFormDemo extends MvElement {
             label="Last name"
             placeholder="Enter last name here..."
             .value="${this.lastName}"
+            .error="${matchError(this.errors, "lastName")}"
             required
           ></mv-form-field>
-          <mv-form-group name="locations" .values="${this.locations}">
+          <mv-form-group
+            name="locations"
+            .values="${this.locations}"
+            .error="${matchError(this.errors, "locations")}"
+          >
             <label>Locations <i class="required">*</i></label>
             ${(this.locations || []).map(
               (address, index) => html`
@@ -120,7 +134,16 @@ export class MvFormDemo extends MvElement {
                       ( ${index + 1} )
                     </label>
                   </legend>
-                  <mv-form-field label="Street address" required>
+                  <mv-form-field
+                    label="Street address"
+                    .error="${matchError(
+                      this.errors,
+                      "streetAddress",
+                      "locations",
+                      index
+                    )}"
+                    required
+                  >
                     <textarea
                       name="streetAddress"
                       slot="field"
@@ -136,6 +159,12 @@ export class MvFormDemo extends MvElement {
                     placeholder="Enter city..."
                     .value="${address.city}"
                     .index="${index}"
+                    .error="${matchError(
+                      this.errors,
+                      "city",
+                      "locations",
+                      index
+                    )}"
                     required
                   ></mv-form-field>
                   <mv-form-field
@@ -145,6 +174,12 @@ export class MvFormDemo extends MvElement {
                     placeholder="Enter state..."
                     .value="${address.state}"
                     .index="${index}"
+                    .error="${matchError(
+                      this.errors,
+                      "state",
+                      "locations",
+                      index
+                    )}"
                   ></mv-form-field>
                   <mv-form-field
                     item
@@ -153,6 +188,12 @@ export class MvFormDemo extends MvElement {
                     placeholder="Enter country..."
                     .value="${address.country}"
                     .index="${index}"
+                    .error="${matchError(
+                      this.errors,
+                      "country",
+                      "locations",
+                      index
+                    )}"
                     required
                   ></mv-form-field>
                 </fieldset>
@@ -160,7 +201,10 @@ export class MvFormDemo extends MvElement {
             )}
             <button @click="${this.addLocation}">&#x271A; add</button>
           </mv-form-group>
-          <mv-form-field required>
+          <mv-form-field
+            .error="${matchError(this.errors, "remarks")}"
+            required
+          >
             <label slot="label">Remarks</label>
             <textarea
               name="remarks"
@@ -170,17 +214,19 @@ export class MvFormDemo extends MvElement {
               @change="${this.changeRemarks}"
             ></textarea>
           </mv-form-field>
+          <button @click="${clearForm}">Clear</button>
+          <button @click="${submitForm}">Submit</button>
         </mv-form>
       </mv-container>
     `;
   }
 
-  formSubmit = event => {
-    const {
-      detail: { originalEvent }
-    } = event;
-    console.log("originalEvent", originalEvent);
-  };
+  connectedCallback() {
+    this.addEventListener("update-errors", this.handleErrors);
+    this.addEventListener("validation-success", this.handleSubmit);
+    this.addEventListener("clear-errors", this.clearErrors);
+    super.connectedCallback();
+  }
 
   changeStreetAddress = index => event => {
     const { target } = event;
@@ -196,7 +242,11 @@ export class MvFormDemo extends MvElement {
 
   addLocation = event => {
     const value = [...this.locations, { ...EMPTY_LOCATION }];
-    changeField(event.target, { name: "locations", value });
+    changeField(event.target, {
+      name: "locations",      
+      originalEvent: event,
+      value
+    });
   };
 
   removeLocation = index => event => {
@@ -204,7 +254,30 @@ export class MvFormDemo extends MvElement {
       ...[...this.locations.slice(0, index)],
       ...[...this.locations.slice(index + 1)]
     ];
-    changeField(event.target, { name: "locations", value });
+    changeField(event.target, {
+      name: "locations",
+      validateGroup: true,
+      originalEvent: event,
+      value
+    });
+  };
+
+  handleErrors = event => {
+    const {
+      detail: { errors }
+    } = event;
+    this.errors = errors;
+  };
+
+  handleSubmit = event => {
+    const {
+      detail: { formValues }
+    } = event;
+    alert("Form submit OK: " + JSON.stringify(formValues, null, 2));
+  };
+
+  clearErrors = () => {
+    this.errors = null;
   };
 }
 

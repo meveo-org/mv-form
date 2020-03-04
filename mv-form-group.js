@@ -5,16 +5,28 @@ export class MvFormGroup extends LitElement {
   static get properties() {
     return {
       name: { type: String },
-      values: { type: Object }
+      values: { type: Object },
+      error: { type: String }
     };
   }
 
   static get styles() {
-    return css``;
-  }
-
-  constructor() {
-    super();
+    return css`
+      .form-group {
+        grid-area: group;
+      }
+      .error {
+        grid-area: error;
+        position: relative;
+        font-size: 0.8em;
+        color: #ad4444;
+      }
+      mv-form-group {
+        grid-template-areas:
+          "group"
+          "error";
+      }
+    `;
   }
 
   render() {
@@ -23,6 +35,11 @@ export class MvFormGroup extends LitElement {
         <div class="form-group">
           <slot></slot>
         </div>
+        ${this.error
+          ? html`
+              <div class="error">${this.error}</div>
+            `
+          : html``}
       </div>
     `;
   }
@@ -41,7 +58,10 @@ export class MvFormGroup extends LitElement {
       { ...currentValue, [name]: value },
       ...this.values.slice(index + 1)
     ];
-    changeField(element, { name: this.name, value: values });
+    console.log("changeGroupField");
+    console.log("name :", name);
+    console.log("this.name :", this.name);
+    changeField(element, { name, value: values, group: this.name, index });
   };
 }
 

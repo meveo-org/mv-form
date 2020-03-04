@@ -2,7 +2,7 @@ import "ajv";
 import "jsonata";
 const validator = new Ajv({ allErrors: true });
 
-const mapFieldErrors = (state, schema, errors) => {
+const mapFieldErrors = (schema, errors) => {
   return (errors || []).reduce((allErrors, error) => {
     const { keyword, dataPath, schemaPath, message } = error;
     const dataJsonPath = dataPath.slice(1);
@@ -11,7 +11,7 @@ const mapFieldErrors = (state, schema, errors) => {
       .replace(`/${keyword}`, "")
       .replace(/\//g, ".");
     const property = jsonata(schemaJsonPath).evaluate(schema);
-    const errorMessage = `${property.title} ${error.message}`;
+    const errorMessage = `${property.title} ${message}`;
     return {
       ...allErrors,
       [dataJsonPath]: errorMessage
@@ -19,17 +19,36 @@ const mapFieldErrors = (state, schema, errors) => {
   }, {});
 };
 
-export const validate = (state, schema, name) => {
+export const validate = (schema, state, name, validateGroup) => {
   const valid = validator.validate(schema, state);
-  const errors = mapFieldErrors(state, schema, validator.errors);
+  const errors = mapFieldErrors(schema, validator.errors);
   if (!valid) {
-    if (name) {
+    if (validateGroup) {
+      // fetch all errors for the group
+      return Object.keys(errors || {}).reduce(
+        (groupErrors, key) =>
+          key.startsWith(name)
+            ? { ...groupErrors, [key]: errors[key] }
+            : groupErrors,
+        {}
+      );
+    } else if (name) {
       // if a name is specified, do field level validation
-      return { [name]: errors[name] };
+      return errors[name];
     } else {
       // do form level validation
       return errors;
     }
   }
-  return {};
+  return null;
+};
+
+export const matchError = (errors, name, group, index) => {
+  if (errors) {
+    if (group) {
+      return errors[`${group}[${index}].${name}`];
+    }
+    return errors[name];
+  }
+  return null;
 };

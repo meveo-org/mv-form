@@ -1,11 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": [
-    "firstName",
-    "lastName",
-    "locations"
-  ],
+  "required": ["firstName", "lastName", "locations"],
   "properties": {
     "firstName": {
       "type": "string",
@@ -19,13 +15,11 @@
     },
     "locations": {
       "type": "array",
+      "title": "Locations",
+      "minItems": 1,
       "items": {
         "type": "object",
-        "required": [
-          "streetAddress",
-          "city",
-          "country"
-        ],
+        "required": ["streetAddress", "city", "country"],
         "properties": {
           "streetAddress": {
             "type": "string",
