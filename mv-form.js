@@ -16,7 +16,21 @@ export class MvForm extends LitElement {
         font-family: var(--font-family, Arial);
         font-size: var(--font-size-m, 1em);
       }
+
+      .mv-form {
+        display: grid;
+        grid-gap: var(--mv-form-grid-gap, 5px 10px);
+        grid-template-columns: var(--mv-form-grid-columns, auto);
+        grid-template-rows: var(--mv-form-grid-rows, auto);
+      }
     `;
+  }
+
+  constructor() {
+    super();
+    this.store = null;
+    this.schema = null;
+    this.formValues = {};
   }
 
   render() {
@@ -125,7 +139,7 @@ export class MvForm extends LitElement {
     }
     if (this.errors) {
       this.dispatchEvent(
-        new CustomEvent("validation-fail", {
+        new CustomEvent("update-errors", {
           detail: {
             errors: this.errors
           },

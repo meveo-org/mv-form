@@ -23,53 +23,81 @@ export class MvFormField extends LitElement {
 
   static get styles() {
     return css`
+      :host {
+        --mv-form-font-family: var(--font-family, Arial);
+        --mv-form-font-size: var(--font-size-m, 1em);
+      }
+
       .label {
         grid-area: label;
-        width: var(--mv-form-field-label-width, 20px);
-        white-space: nowrap;
       }
+
       .label .default-label,
       .label ::slotted(*) {
-        font-size: 1em;
+        font-size: var(--mv-form-font-size);
         font-weight: bold;
         color: #4e686d;
       }
+
       .label .required {
         font-style: normal;
         color: #ff0000;
       }
+
       .field {
         grid-area: field;
-        font-size: 1em;
+        font-size: var(--mv-form-font-size);
       }
+
       .error {
         grid-area: error;
         position: relative;
-        font-size: 0.8em;
-        margin-top: -5px;
+        font-size: calc(var(--mv-form-font-size) * 0.8);
         color: #ad4444;
       }
+      
       .field .default-field,
       .field ::slotted(*) {
-        font-size: 1.2em;
         width: 100%;
       }
+
+      .field .default-field,
+      .field ::slotted(*),
+      .field .default-field::placeholder,
+      .field ::slotted(*)::placeholder {
+        font-family: var(--mv-form-font-family);
+        font-size: var(--mv-form-font-size);
+      }
+
+      .field .default-field::placeholder,
+      .field ::slotted(*)::placeholder {
+        font-weight: 100;
+      }
+
       .mv-form-field {
         display: grid;
-        grid-gap: 5px 20px;
-        margin: 10px;
+        grid-column-gap: 20px;
+        grid-row-gap: 5px;
+        margin-bottom: 10px;
         align-items: center;
       }
+
       .mv-form-field.label-left {
+        grid-template-columns: 20% auto;
+        grid-template-rows: auto;
         grid-template-areas:
-          "label field field field field"
-          ". error error error error";
+          "label field"
+          ". error";
       }
+
       .mv-form-field.label-right {
+        grid-template-columns: auto 20%;
+        grid-template-rows: auto;
         grid-template-areas:
-          "field field field field label"
-          "error error error error .";
+          "field label"
+          "error .";        
       }
+
       .mv-form-field.label-top {
         grid-template-areas:
           "label"

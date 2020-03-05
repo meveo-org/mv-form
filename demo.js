@@ -54,14 +54,11 @@ export class MvFormDemo extends MvElement {
         --mv-container-padding: 20px 30px;
       }
 
-      mv-form-group {
-        --mv-form-field-label-width: 60px;
-      }
-
       textarea {
         width: 80%;
-        min-height: 100px;
+        min-height: 50px;
         border: 1px solid black;
+        margin: 0;
         padding: 5px;
         border-radius: 5px;
         resize: none;
@@ -202,7 +199,9 @@ export class MvFormDemo extends MvElement {
             <button @click="${this.addLocation}">&#x271A; add</button>
           </mv-form-group>
           <mv-form-field
+            custom
             .error="${matchError(this.errors, "remarks")}"
+            label-position="top"
             required
           >
             <label slot="label">Remarks</label>
@@ -214,8 +213,10 @@ export class MvFormDemo extends MvElement {
               @change="${this.changeRemarks}"
             ></textarea>
           </mv-form-field>
-          <button @click="${clearForm}">Clear</button>
-          <button @click="${submitForm}">Submit</button>
+          <div class="footer-buttons">
+            <button @click="${clearForm(this.confirmClearForm)}">Clear</button>
+            <button @click="${submitForm}">Submit</button>
+          </div>
         </mv-form>
       </mv-container>
     `;
@@ -243,7 +244,7 @@ export class MvFormDemo extends MvElement {
   addLocation = event => {
     const value = [...this.locations, { ...EMPTY_LOCATION }];
     changeField(event.target, {
-      name: "locations",      
+      name: "locations",
       originalEvent: event,
       value
     });
@@ -262,6 +263,14 @@ export class MvFormDemo extends MvElement {
     });
   };
 
+  confirmClearForm = () => {
+    return confirm("Are you sure you want to clear the form? ");
+  };
+
+  clearErrors = () => {
+    this.errors = null;
+  };
+
   handleErrors = event => {
     const {
       detail: { errors }
@@ -274,10 +283,6 @@ export class MvFormDemo extends MvElement {
       detail: { formValues }
     } = event;
     alert("Form submit OK: " + JSON.stringify(formValues, null, 2));
-  };
-
-  clearErrors = () => {
-    this.errors = null;
   };
 }
 

@@ -15,13 +15,19 @@ export class MvFormGroup extends LitElement {
       .form-group {
         grid-area: group;
       }
+
       .error {
         grid-area: error;
         position: relative;
         font-size: 0.8em;
         color: #ad4444;
       }
-      mv-form-group {
+
+      .mv-form-group {
+        display: grid;
+        grid-gap: 10px;
+        grid-template-columns: auto;
+        grid-template-rows: auto;
         grid-template-areas:
           "group"
           "error";
@@ -58,9 +64,6 @@ export class MvFormGroup extends LitElement {
       { ...currentValue, [name]: value },
       ...this.values.slice(index + 1)
     ];
-    console.log("changeGroupField");
-    console.log("name :", name);
-    console.log("this.name :", this.name);
     changeField(element, { name, value: values, group: this.name, index });
   };
 }
