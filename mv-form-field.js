@@ -146,7 +146,7 @@ export class MvFormField extends LitElement {
               ${this.label}
             </label>
           </slot>
-          ${this.required
+          ${this.required && !!this.label
             ? html`
                 <i class="required">*</i>
               `
