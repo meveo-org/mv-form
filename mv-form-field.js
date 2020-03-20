@@ -138,20 +138,26 @@ export class MvFormField extends LitElement {
   render() {
     const value = this.value || "";
     const hasError = !!this.error;
+    const noLabel = this.labelPosition === "none";
     return html`
       <div class="mv-form-field label-${this.labelPosition}">
-        <div class="label">
-          <slot name="label">
-            <label class="default-label">
-              ${this.label}
-            </label>
-          </slot>
-          ${this.required && !!this.label
-            ? html`
-                <i class="required">*</i>
-              `
-            : html``}
-        </div>
+        ${noLabel
+          ? html``
+          : html`
+              <div class="label">
+                <slot name="label">
+                  <label class="default-label">
+                    ${this.label}
+                  </label>
+                </slot>
+                ${this.required
+                  ? html`
+                      <i class="required">*</i>
+                    `
+                  : html``}
+              </div>
+            `}
+
         <div class="field">
           <slot name="field">
             <mv-input

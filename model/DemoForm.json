@@ -47,6 +47,16 @@
       "type": "string",
       "minLength": 1,
       "title": "Remarks"
+    },
+    "inlineField1": {
+      "type": "string",
+      "minLength": 1,
+      "title": "Inline Field 1"
+    },
+    "inlineField2": {
+      "type": "string",
+      "minLength": 1,
+      "title": "Inline Field 2"
     }
   }
 }

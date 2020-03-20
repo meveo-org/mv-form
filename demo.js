@@ -29,6 +29,8 @@ export class MvFormDemo extends MvElement {
       lastName: { type: String, attribute: false },
       locations: { type: Array, attribute: false },
       remarks: { type: String, attribute: false },
+      inlineField1: { type: String, attribute: false },
+      inlineField2: { type: String, attribute: false },
       errors: { type: Object, attribute: false }
     };
   }
@@ -79,6 +81,12 @@ export class MvFormDemo extends MvElement {
       fieldset {
         margin: 10px auto;
       }
+      
+      .inline-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+      }
     `;
   }
 
@@ -89,7 +97,9 @@ export class MvFormDemo extends MvElement {
         { property: "firstName", value: "firstName" },
         { property: "lastName", value: "lastName" },
         { property: "locations", value: "locations" },
-        { property: "remarks", value: "remarks" }
+        { property: "remarks", value: "remarks" },
+        { property: "inlineField1", value: "inlineField1" },
+        { property: "inlineField2", value: "inlineField2" }
       ]
     };
   }
@@ -213,6 +223,24 @@ export class MvFormDemo extends MvElement {
               @change="${this.changeRemarks}"
             ></textarea>
           </mv-form-field>
+          <div class="inline-fields">
+            <mv-form-field
+              name="inlineField1"
+              placeholder="Inline Field 1"
+              .value="${this.inlineField1}"
+              .error="${matchError(this.errors, "inlineField1")}"
+              required
+              label-position="none"
+            ></mv-form-field>
+            <mv-form-field
+              name="inlineField2"
+              placeholder="Inline Field 2"
+              .value="${this.inlineField2}"
+              .error="${matchError(this.errors, "inlineField2")}"
+              required
+              label-position="none"
+            ></mv-form-field>
+          </div>
           <div class="footer-buttons">
             <button @click="${clearForm(this.confirmClearForm)}">Clear</button>
             <button @click="${submitForm}">Submit</button>
