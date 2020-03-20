@@ -106,10 +106,17 @@ export class MvFormField extends LitElement {
           "field"
           "error";
       }
+
       .mv-form-field.label-bottom {
         grid-template-areas:
           "field"
           "label"
+          "error";
+      }
+
+      .mv-form-field.label-none {
+        grid-template-areas:
+          "field"
           "error";
       }
     `;
@@ -139,7 +146,7 @@ export class MvFormField extends LitElement {
               ${this.label}
             </label>
           </slot>
-          ${this.required && !!this.label
+          ${this.required
             ? html`
                 <i class="required">*</i>
               `

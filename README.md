@@ -31,9 +31,12 @@ To experiment with the MvForm component.
       name="firstName"
       label="First name"
       placeholder="Enter first name here..."
+      label-position="top"                    // valid values are top, bottom, left, right, or none;
       .value="${this.firstName}"
       .error="${FormUtils.matchError(this.errors, "firstName")}"
-      required
+      required                                // enable to make field required
+      disabled                                // indicates field is disabled
+      immediate                               // trigger input value change on key press
     ></mv-form-field>
     <button @click="${FormUtils.submitForm}">Submit</button>
   <mv-form>
