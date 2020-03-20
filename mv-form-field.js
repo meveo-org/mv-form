@@ -13,6 +13,8 @@ export class MvFormField extends LitElement {
       item: { type: Boolean },
       index: { type: Number },
       required: { type: Boolean, attribute: true, reflect: true },
+      disabled: { type: Boolean, attribute: true, reflect: true },
+      immediate: { type: Boolean, attribute: true, reflect: true },
       labelPosition: {
         type: String,
         attribute: "label-position",
@@ -55,7 +57,7 @@ export class MvFormField extends LitElement {
         font-size: calc(var(--mv-form-font-size) * 0.8);
         color: #ad4444;
       }
-      
+
       .field .default-field,
       .field ::slotted(*) {
         width: 100%;
@@ -95,7 +97,7 @@ export class MvFormField extends LitElement {
         grid-template-rows: auto;
         grid-template-areas:
           "field label"
-          "error .";        
+          "error .";
       }
 
       .mv-form-field.label-top {
@@ -121,6 +123,8 @@ export class MvFormField extends LitElement {
     this.placeholder = "";
     this.error = "";
     this.required = false;
+    this.disabled = false;
+    this.immediate = false;
     this.labelPosition = "left";
   }
 
@@ -135,7 +139,7 @@ export class MvFormField extends LitElement {
               ${this.label}
             </label>
           </slot>
-          ${this.required
+          ${this.required && !!this.label
             ? html`
                 <i class="required">*</i>
               `
@@ -150,6 +154,9 @@ export class MvFormField extends LitElement {
               placeholder="${this.placeholder}"
               ?has-error="${hasError}"
               @input-change="${this.changeValue}"
+              ?disabled="${this.disabled}"
+              ?required="${this.required}"
+              ?immediate="${this.immediate}"
             ></mv-input>
           </slot>
         </div>
