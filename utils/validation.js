@@ -46,7 +46,8 @@ export const validate = (schema, state, name, validateGroup) => {
 export const matchError = (errors, name, group, index) => {
   if (errors) {
     if (group) {
-      return errors[`${group}[${index}].${name}`];
+      const groupField = !!name ? `.${name}` : "";
+      return errors[`${group}[${index}]${groupField}`];
     }
     return errors[name];
   }
