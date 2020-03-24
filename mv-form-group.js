@@ -29,6 +29,11 @@ export class MvFormGroup extends LitElement {
         grid-template-columns: auto;
         grid-template-rows: auto;
         grid-template-areas:
+          "group";
+      }
+
+      .has-error {
+        grid-template-areas:
           "group"
           "error";
       }
@@ -36,8 +41,9 @@ export class MvFormGroup extends LitElement {
   }
 
   render() {
+    const errorClass = this.error ? " has-error" : "";
     return html`
-      <div class="mv-form-group">
+      <div class="mv-form-group${errorClass}">
         <div class="form-group">
           <slot></slot>
         </div>
