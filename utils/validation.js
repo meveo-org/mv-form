@@ -1,6 +1,6 @@
 import "ajv";
 import "jsonata";
-const validator = new Ajv({ allErrors: true });
+const validator = new Ajv({ allErrors: true, useDefaults: "empty" });
 
 const mapFieldErrors = (schema, errors) => {
   return (errors || []).reduce((allErrors, error) => {
@@ -14,7 +14,7 @@ const mapFieldErrors = (schema, errors) => {
     const errorMessage = `${property.title} ${message}`;
     return {
       ...allErrors,
-      [dataJsonPath]: errorMessage
+      [dataJsonPath]: errorMessage,
     };
   }, {});
 };
