@@ -1,6 +1,15 @@
 import "ajv";
 import "jsonata";
-const validator = new Ajv({ allErrors: true, useDefaults: "empty" });
+const validator = new Ajv({
+  allErrors: true,
+  format: "full",
+  missingRefs: true,
+  loopRequired: "Infinite",
+  verbose: true,
+  extendRefs: true,
+  schemaId: "auto",
+  useDefaults: "empty",
+});
 
 const mapFieldErrors = (schema, errors) => {
   return (errors || []).reduce((allErrors, error) => {
