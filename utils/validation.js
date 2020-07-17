@@ -1,6 +1,7 @@
 import "ajv";
 import "jsonata";
-const validator = new Ajv({
+
+const DEFAULT_CONFIG = {
   allErrors: true,
   format: "full",
   missingRefs: true,
@@ -9,7 +10,7 @@ const validator = new Ajv({
   extendRefs: true,
   schemaId: "auto",
   useDefaults: "empty",
-});
+};
 
 const mapFieldErrors = (schema, errors) => {
   return (errors || []).reduce((allErrors, error) => {
@@ -28,7 +29,13 @@ const mapFieldErrors = (schema, errors) => {
   }, {});
 };
 
-export const validate = (schema, state, name, validateGroup) => {
+export const validate = (schema, state, name, validateGroup, refSchemas) => {
+  const validator = new Ajv(DEFAULT_CONFIG);
+  if (!!refSchemas && refSchemas.length > 0) {
+    refSchemas.forEach(refSchema => {
+      validator.addSchema(refSchema);
+    });
+  }
   const valid = validator.validate(schema, state);
   const errors = mapFieldErrors(schema, validator.errors);
   if (!valid) {
