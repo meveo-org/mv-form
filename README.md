@@ -26,7 +26,11 @@ To experiment with the MvForm component.
 ### Form with single input field
 
 ```html
-  <mv-form .store="${this.store}" .schema="${schema}">
+  <mv-form
+  .store="${this.store}"
+  .schema="${schema}"
+  .refSchemas="${[refSchema1, refSchema2, ...]}" // optional list of schemas referred to in the schema
+  >
     <mv-form-field
       name="firstName"
       label="First name"
