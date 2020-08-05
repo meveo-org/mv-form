@@ -6,7 +6,8 @@ export class MvForm extends LitElement {
     return {
       store: { type: Object, attribute: false, reflect: true },
       schema: { type: Object, attribute: false, reflect: true },
-      formValues: { type: Object, attribute: false, reflect: true }
+      formValues: { type: Object, attribute: false, reflect: true },
+      refSchemas: { type: Array, attribute: false, reflect: true },
     };
   }
 
@@ -48,10 +49,10 @@ export class MvForm extends LitElement {
     super.connectedCallback();
   }
 
-  changeField = event => {
+  changeField = (event) => {
     const usesStore = !!this.store;
     const {
-      detail: { name, value, group, index, validateGroup }
+      detail: { name, value, group, index, validateGroup },
     } = event;
     let fieldError = null;
     const fieldName = group || name;
@@ -63,7 +64,8 @@ export class MvForm extends LitElement {
         this.schema,
         this.store.state,
         errorKey,
-        validateGroup
+        validateGroup,
+        this.refSchemas
       );
     } else {
       this.formValues[fieldName] = value;
@@ -71,14 +73,15 @@ export class MvForm extends LitElement {
         new CustomEvent("update-form", {
           detail: { values: this.formValues },
           bubbles: true,
-          composed: true
+          composed: true,
         })
       );
       fieldError = validate(
         this.schema,
         this.formValues,
         errorKey,
-        validateGroup
+        validateGroup,
+        this.refSchemas
       );
     }
 
@@ -95,7 +98,7 @@ export class MvForm extends LitElement {
                 : { ...remainingErrors, [key]: this.errors[key] },
             {}
           ),
-          ...errorsFound
+          ...errorsFound,
         };
       } else {
         this.errors = { ...this.errors, ...errorsFound };
@@ -103,15 +106,15 @@ export class MvForm extends LitElement {
       this.dispatchEvent(
         new CustomEvent("update-errors", {
           detail: {
-            errors: { ...this.errors }
+            errors: { ...this.errors },
           },
           bubbles: true,
-          composed: true
+          composed: true,
         })
       );
     } else {
       const errorExists = Object.keys(this.errors || {}).some(
-        key => key === errorKey
+        (key) => key === errorKey
       );
       if (errorExists) {
         // remove the existing error
@@ -119,10 +122,10 @@ export class MvForm extends LitElement {
         this.dispatchEvent(
           new CustomEvent("update-errors", {
             detail: {
-              errors: { ...this.errors }
+              errors: { ...this.errors },
             },
             bubbles: true,
-            composed: true
+            composed: true,
           })
         );
       }
@@ -133,28 +136,34 @@ export class MvForm extends LitElement {
     const usesStore = !!this.store;
     if (usesStore) {
       const { state } = this.store;
-      this.errors = validate(this.schema, state);
+      this.errors = validate(this.schema, state, null, null, this.refSchemas);
     } else {
-      this.errors = validate(this.schema, this.formValues);
+      this.errors = validate(
+        this.schema,
+        this.formValues,
+        null,
+        null,
+        this.refSchemas
+      );
     }
     if (this.errors) {
       this.dispatchEvent(
         new CustomEvent("update-errors", {
           detail: {
-            errors: this.errors
+            errors: this.errors,
           },
           bubbles: true,
-          composed: true
+          composed: true,
         })
       );
     } else {
       this.dispatchEvent(
         new CustomEvent("validation-success", {
           detail: {
-            formValues: usesStore ? this.store.state : this.formValues
+            formValues: usesStore ? this.store.state : this.formValues,
           },
           bubbles: true,
-          composed: true
+          composed: true,
         })
       );
     }
@@ -169,7 +178,7 @@ export class MvForm extends LitElement {
         new CustomEvent("update-form", {
           detail: { values: this.formValues },
           bubbles: true,
-          composed: true
+          composed: true,
         })
       );
     }
