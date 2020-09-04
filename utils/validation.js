@@ -12,7 +12,7 @@ const DEFAULT_CONFIG = {
   useDefaults: "empty",
 };
 
-const mapFieldErrors = (schema, errors) => {
+const mapFieldErrors = (schema, errors, refSchemas) => {
   return (errors || []).reduce((allErrors, error) => {
     const { keyword, dataPath, schemaPath, message } = error;
     const dataJsonPath = dataPath.slice(1);
@@ -20,7 +20,18 @@ const mapFieldErrors = (schema, errors) => {
       .replace("#/", "")
       .replace(`/${keyword}`, "")
       .replace(/\//g, ".");
-    const property = jsonata(schemaJsonPath).evaluate(schema);
+    const validationSchema = [
+      schema,
+      ...(refSchemas || []),
+    ].find((currentSchema) =>
+      schemaJsonPath.startsWith(`${currentSchema.id}.`)
+    );
+    const usesRefSchema =
+      !!validationSchema.id && schema.id !== validationSchema.id;
+    const searchPath = usesRefSchema
+      ? schemaJsonPath.substring(schemaJsonPath.indexOf(".") + 1)
+      : schemaJsonPath;
+    const property = jsonata(searchPath).evaluate(validationSchema);
     const errorMessage = `${property.title} ${message}`;
     return {
       ...allErrors,
@@ -32,12 +43,12 @@ const mapFieldErrors = (schema, errors) => {
 export const validate = (schema, state, name, validateGroup, refSchemas) => {
   const validator = new Ajv(DEFAULT_CONFIG);
   if (!!refSchemas && refSchemas.length > 0) {
-    refSchemas.forEach(refSchema => {
+    refSchemas.forEach((refSchema) => {
       validator.addSchema(refSchema);
     });
   }
   const valid = validator.validate(schema, state);
-  const errors = mapFieldErrors(schema, validator.errors);
+  const errors = mapFieldErrors(schema, validator.errors, refSchemas);
   if (!valid) {
     if (validateGroup) {
       // fetch all errors for the group
