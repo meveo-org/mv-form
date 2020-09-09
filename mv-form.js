@@ -1,6 +1,20 @@
 import { LitElement, html, css } from "lit-element";
 import { validate } from "./utils/index.js";
 
+const mapValue = (formValues, name, value) => {
+  const propertyIndex = (name || "").indexOf(".");
+  if (propertyIndex > -1) {
+    const parentName = name.substring(0, propertyIndex);
+    const propertyValue = mapValue(
+      formValues[parentName],
+      name.substring(propertyIndex + 1),
+      value
+    );
+    return { [parentName]: propertyValue };
+  }
+  return { [name]: value };
+};
+
 export class MvForm extends LitElement {
   static get properties() {
     return {
@@ -8,6 +22,7 @@ export class MvForm extends LitElement {
       schema: { type: Object, attribute: false, reflect: true },
       formValues: { type: Object, attribute: false, reflect: true },
       refSchemas: { type: Array, attribute: false, reflect: true },
+      storageModes: { type: String, attribute: "storage-modes", reflect: true },
     };
   }
 
@@ -58,17 +73,12 @@ export class MvForm extends LitElement {
     const fieldName = group || name;
     const groupName = validateGroup ? group : `${group}[${index}].${name}`;
     const errorKey = !!group ? groupName : name;
+    const values = usesStore ? this.store.state : this.formValues;
     if (usesStore) {
       this.store.updateValue(fieldName, value);
-      fieldError = validate(
-        this.schema,
-        this.store.state,
-        errorKey,
-        validateGroup,
-        this.refSchemas
-      );
     } else {
-      this.formValues[fieldName] = value;
+      const formValue = mapValue(this.formValues, fieldName, value);
+      this.formValues = { ...this.formValues, ...formValue };
       this.dispatchEvent(
         new CustomEvent("update-form", {
           detail: { values: this.formValues },
@@ -76,14 +86,15 @@ export class MvForm extends LitElement {
           composed: true,
         })
       );
-      fieldError = validate(
-        this.schema,
-        this.formValues,
-        errorKey,
-        validateGroup,
-        this.refSchemas
-      );
     }
+
+    fieldError = validate(
+      this.schema,
+      values,
+      errorKey,
+      validateGroup,
+      this.refSchemas
+    );
 
     if (fieldError) {
       const errorsFound = validateGroup

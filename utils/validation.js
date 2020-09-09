@@ -14,22 +14,28 @@ const DEFAULT_CONFIG = {
 
 const mapFieldErrors = (schema, errors, refSchemas) => {
   return (errors || []).reduce((allErrors, error) => {
-    const { keyword, dataPath, schemaPath, message } = error;
+    const { keyword, dataPath, schemaPath, message, parentSchema } = error;
     const dataJsonPath = dataPath.slice(1);
     const schemaJsonPath = schemaPath
       .replace("#/", "")
       .replace(`/${keyword}`, "")
       .replace(/\//g, ".");
-    const validationSchema = [
-      schema,
-      ...(refSchemas || []),
-    ].find((currentSchema) =>
-      schemaJsonPath.startsWith(`${currentSchema.id}.`)
-    );
+    const dotIndex = schemaJsonPath.indexOf(".");
+    const schemaSuffix = dotIndex > -1 ? "." : "";
+    const validationSchema =
+      [schema, ...(refSchemas || [])].find((currentSchema) => {
+        const schemaName = `${currentSchema.id}${schemaSuffix}`;
+        return (
+          schemaJsonPath.startsWith(schemaName) ||
+          parentSchema.title.startsWith(schemaName)
+        );
+      }) || schema;
     const usesRefSchema =
-      !!validationSchema.id && schema.id !== validationSchema.id;
+      !schemaJsonPath.startsWith("properties.") &&
+      !!validationSchema.id &&
+      schema.id !== validationSchema.id;
     const searchPath = usesRefSchema
-      ? schemaJsonPath.substring(schemaJsonPath.indexOf(".") + 1)
+      ? schemaJsonPath.substring(dotIndex + 1)
       : schemaJsonPath;
     const property = jsonata(searchPath).evaluate(validationSchema);
     const errorMessage = `${property.title} ${message}`;
