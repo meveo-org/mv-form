@@ -12,7 +12,7 @@ const DEFAULT_CONFIG = {
   useDefaults: "empty",
 };
 
-const mapFieldErrors = (schema, errors, refSchemas) => {
+const mapFieldErrors = (name, schema, errors, refSchemas) => {
   return (errors || []).reduce((allErrors, error) => {
     const { keyword, dataPath, schemaPath, message, parentSchema } = error;
     const dataJsonPath = dataPath.slice(1);
@@ -37,8 +37,8 @@ const mapFieldErrors = (schema, errors, refSchemas) => {
     const searchPath = usesRefSchema
       ? schemaJsonPath.substring(dotIndex + 1)
       : schemaJsonPath;
-    const property = jsonata(searchPath).evaluate(validationSchema);
-    const errorMessage = `${property.title} ${message}`;
+    const property = jsonata(searchPath).evaluate(validationSchema) || {};
+    const errorMessage = `${property.title || name} ${message}`;
     return {
       ...allErrors,
       [dataJsonPath]: errorMessage,
@@ -54,7 +54,7 @@ export const validate = (schema, state, name, validateGroup, refSchemas) => {
     });
   }
   const valid = validator.validate(schema, state);
-  const errors = mapFieldErrors(schema, validator.errors, refSchemas);
+  const errors = mapFieldErrors(name, schema, validator.errors, refSchemas);
   if (!valid) {
     if (validateGroup) {
       // fetch all errors for the group
