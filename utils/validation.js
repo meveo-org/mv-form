@@ -82,9 +82,7 @@ export const matchError = (errors, name, group, index) => {
       const groupField = !!name ? `.${name}` : "";
       return errors[`${group}[${index}]${groupField}`];
     }
-    return (
-      errors[name] || Object.keys(errors).find((key) => key.startsWith(name))
-    );
+    return errors[name];
   }
   return null;
 };
