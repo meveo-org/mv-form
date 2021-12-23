@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/meveo-org/mv-form/issues"
   },
-  "homepage": "https://github.com/meveo-org/mv-form#readme"
+  "homepage": "https://github.com/meveo-org/mv-form#readme",
+  "dependencies": {
+    "lit-element": "^3.0.2"
+  }
 }
