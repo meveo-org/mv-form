@@ -2,9 +2,9 @@
   "name": "@meveo-org/mv-form",
   "version": "1.0.0",
   "description": "MvForm is a Meveo form component (based on lit-element) that provides functionality to create, validate, and submit forms.",
-  "main": "mv-form.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "es-dev-server --node-resolve --watch"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "homepage": "https://github.com/meveo-org/mv-form#readme",
   "dependencies": {
     "lit-element": "^3.0.2"
+  },
+  "devDependencies": {
+    "es-dev-server": "^1.46.1"
   }
 }
