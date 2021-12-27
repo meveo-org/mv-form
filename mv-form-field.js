@@ -1,6 +1,6 @@
 import { LitElement, html, css } from "lit-element";
 import { changeField, changeGroupField } from "./utils/index.js";
-import "mv-input";
+import "@meveo-org/mv-input";
 
 export class MvFormField extends LitElement {
   static get properties() {
