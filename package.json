@@ -18,7 +18,9 @@
   "homepage": "https://github.com/meveo-org/mv-form#readme",
   "dependencies": {
     "lit": "^2.0.2",
-    "@meveo-org/mv-input": "^1.0.0"
+    "@meveo-org/mv-input": "^1.0.0",
+    "ajv": "^8.8.2",
+    "jsonata": "^1.8.5"
   },
   "devDependencies": {
     "es-dev-server": "^1.46.1"
