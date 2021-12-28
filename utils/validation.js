@@ -1,5 +1,5 @@
-import "ajv";
-import "jsonata";
+import Ajv from "ajv";
+import jsonata from "jsonata";
 
 const DEFAULT_CONFIG = {
   allErrors: true,

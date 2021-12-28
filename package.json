@@ -19,7 +19,7 @@
   "dependencies": {
     "lit": "^2.0.2",
     "@meveo-org/mv-input": "^1.0.0",
-    "ajv": "^8.8.2",
+    "ajv": "^6.11.0",
     "jsonata": "^1.8.5"
   },
   "devDependencies": {
