@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit-element";
+import { LitElement, html, css } from "lit";
 import { changeField, changeGroupField } from "./utils/index.js";
 import "@meveo-org/mv-input";
 

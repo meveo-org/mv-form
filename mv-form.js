@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit-element";
+import { LitElement, html, css } from "lit";
 import { validate } from "./utils/index.js";
 
 const mapValue = (formValues, name, value) => {

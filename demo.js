@@ -1,5 +1,5 @@
-import { html, css } from "lit-element";
-import { MvElement } from "mv-element";
+import { html, css } from "lit";
+import { MvElement } from "@meveo-org/mv-element";
 import {
   changeField,
   changeGroupField,
@@ -7,8 +7,8 @@ import {
   clearForm,
   matchError
 } from "./utils/index.js";
-import "mv-container";
-import "mv-input";
+import "@meveo-org/mv-container";
+import "@meveo-org/mv-input";
 import "./mv-form.js";
 import "./mv-form-field.js";
 import "./mv-form-group.js";
