@@ -34,6 +34,7 @@ To experiment with the MvForm component.
     <mv-form-field
       name="firstName"
       label="First name"
+      type="Text"                              // Text,Tel,Email
       placeholder="Enter first name here..."
       label-position="top"                    // valid values are top, bottom, left, right, or none;
       .value="${this.firstName}"

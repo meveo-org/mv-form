@@ -8,6 +8,7 @@ export class MvFormField extends LitElement {
       name: { type: String },
       label: { type: String },
       value: { type: Object },
+      type : { type: String },
       placeholder: { type: String },
       error: { type: String },
       item: { type: Boolean },
@@ -127,6 +128,7 @@ export class MvFormField extends LitElement {
     this.name = "";
     this.label = "";
     this.value = "";
+    this.type = "";
     this.placeholder = "";
     this.error = "";
     this.required = false;
@@ -162,7 +164,7 @@ export class MvFormField extends LitElement {
           <slot name="field">
             <mv-input
               name="${this.name}"
-              type="text"
+              type="${this.type}"
               .value="${value}"
               placeholder="${this.placeholder}"
               ?has-error="${hasError}"
