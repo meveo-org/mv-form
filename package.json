@@ -4,9 +4,7 @@
   "description": "MvForm is a Meveo form component (based on lit-element) that provides functionality to create, validate, and submit forms.",
   "main": "index.js",
   "scripts": {
-    "serve": "es-dev-server --node-resolve --watch",
-    "dev": "webpack serve -c webpack.config.cjs",
-    "build": "webpack --config webpack.config.cjs"
+    "serve": "es-dev-server --node-resolve --watch"
   },
   "repository": {
     "type": "git",
@@ -19,18 +17,12 @@
   },
   "homepage": "https://github.com/meveo-org/mv-form#readme",
   "dependencies": {
-    "@meveo-org/mv-element": "^1.0.1",
-    "@meveo-org/mv-input": "^1.0.0",
-    "@meveo-org/mv-store": "^1.0.1",
-    "ajv": "^8.12.0",
-    "html-webpack-plugin": "^5.5.0",
-    "jsonata": "^1.8.5",
     "lit": "^2.0.2",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
+    "@meveo-org/mv-input": "^1.0.0",
+    "ajv": "^6.11.0",
+    "jsonata": "^1.8.5"
   },
   "devDependencies": {
-    "es-dev-server": "^1.46.1",
-    "webpack-dev-server": "^4.11.1"
+    "es-dev-server": "^1.46.1"
   }
 }

@@ -1,5 +1,5 @@
 import { html, css } from "lit";
-import { MvElement } from "@meveo-org/mv-element";
+import { MvElement } from "mv-element";
 import {
   changeField,
   changeGroupField,
@@ -122,24 +122,6 @@ export class MvFormDemo extends MvElement {
             placeholder="Enter last name here..."
             .value="${this.lastName}"
             .error="${matchError(this.errors, "lastName")}"
-            required
-          ></mv-form-field>
-          <mv-form-field
-            name="email"
-            label="Email"
-            type="email"
-            placeholder="Enter email name here..."
-            .value="${this.email}"
-            .error="${matchError(this.errors, "Email")}"
-            required
-          ></mv-form-field>
-          <mv-form-field
-            name="numberPhone"
-            label="Number phone"
-            type = "tel"
-            placeholder="Enter number phone here..."
-            .value="${this.numberPhone}"
-            .error="${matchError(this.errors, "numberPhone")}"
             required
           ></mv-form-field>
           <mv-form-group

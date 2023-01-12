@@ -16,20 +16,24 @@
       type="image/x-icon"
       href="https://front.meveo.org/images/favicon.ico"
     />
-    <script type="importmap">
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/gh/meveo-org/mv-dependencies@master/es-module-shims/es-module-shims.min.js"
+    ></script>
+    <script type="importmap-shim">
       {
         "imports": {
-          "lit": "https://cdn.jsdelivr.net/gh/meveo-org/mv-dependencies@master/lit-core.min-v2.2.0.js",
+          "lit-element": "https://cdn.jsdelivr.net/gh/meveo-org/mv-dependencies@master/lit-element.js",
           "jsonata": "https://cdn.jsdelivr.net/gh/meveo-org/mv-dependencies@master/jsonata.min.js",
           "ajv": "https://cdn.jsdelivr.net/gh/meveo-org/mv-dependencies@master/ajv/ajv.min.js",
-          "@meveo-org/mv-element": "https://cdn.jsdelivr.net/gh/meveo-org/mv-modules@master/mv-element.js",
-          "@meveo-org/mv-store": "https://cdn.jsdelivr.net/gh/meveo-org/mv-modules@master/mv-store.js",
-          "@meveo-org/mv-container": "https://cdn.jsdelivr.net/gh/meveo-org/mv-container@master/mv-container.js",
-          "@meveo-org/mv-input": "https://cdn.jsdelivr.net/gh/meveo-org/mv-input@master/mv-input.js"
+          "mv-element": "https://cdn.jsdelivr.net/gh/meveo-org/mv-modules@master/mv-element.js",
+          "mv-store": "https://cdn.jsdelivr.net/gh/meveo-org/mv-modules@master/mv-store.js",
+          "mv-container": "https://cdn.jsdelivr.net/gh/meveo-org/mv-container@master/mv-container.js",
+          "mv-input": "https://cdn.jsdelivr.net/gh/meveo-org/mv-input@master/mv-input.js"
         }
       }
     </script>
-    <script type="module" src="./demo.js"></script>
+    <script type="module-shim" src="./demo.js"></script>
   </head>
 
   <body>

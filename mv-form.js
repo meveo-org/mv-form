@@ -1,28 +1,12 @@
 import { LitElement, html, css } from "lit";
 import { validate } from "./utils/index.js";
 
-const mapValue = (formValues, name, value) => {
-  const propertyIndex = (name || "").indexOf(".");
-  if (propertyIndex > -1) {
-    const parentName = name.substring(0, propertyIndex);
-    const propertyValue = mapValue(
-      formValues[parentName],
-      name.substring(propertyIndex + 1),
-      value
-    );
-    return { [parentName]: propertyValue };
-  }
-  return { [name]: value };
-};
-
 export class MvForm extends LitElement {
   static get properties() {
     return {
       store: { type: Object, attribute: false, reflect: true },
       schema: { type: Object, attribute: false, reflect: true },
-      formValues: { type: Object, attribute: false, reflect: true },
-      refSchemas: { type: Array, attribute: false, reflect: true },
-      storageModes: { type: String, attribute: "storage-modes", reflect: true },
+      formValues: { type: Object, attribute: false, reflect: true }
     };
   }
 
@@ -64,37 +48,39 @@ export class MvForm extends LitElement {
     super.connectedCallback();
   }
 
-  changeField = (event) => {
+  changeField = event => {
     const usesStore = !!this.store;
     const {
-      detail: { name, value, group, index, validateGroup },
+      detail: { name, value, group, index, validateGroup }
     } = event;
     let fieldError = null;
     const fieldName = group || name;
     const groupName = validateGroup ? group : `${group}[${index}].${name}`;
     const errorKey = !!group ? groupName : name;
-    const values = usesStore ? this.store.state : this.formValues;
     if (usesStore) {
       this.store.updateValue(fieldName, value);
+      fieldError = validate(
+        this.schema,
+        this.store.state,
+        errorKey,
+        validateGroup
+      );
     } else {
-      const formValue = mapValue(this.formValues, fieldName, value);
-      this.formValues = { ...this.formValues, ...formValue };
+      this.formValues[fieldName] = value;
       this.dispatchEvent(
         new CustomEvent("update-form", {
           detail: { values: this.formValues },
           bubbles: true,
-          composed: true,
+          composed: true
         })
       );
+      fieldError = validate(
+        this.schema,
+        this.formValues,
+        errorKey,
+        validateGroup
+      );
     }
-
-    fieldError = validate(
-      this.schema,
-      values,
-      errorKey,
-      validateGroup,
-      this.refSchemas
-    );
 
     if (fieldError) {
       const errorsFound = validateGroup
@@ -109,7 +95,7 @@ export class MvForm extends LitElement {
                 : { ...remainingErrors, [key]: this.errors[key] },
             {}
           ),
-          ...errorsFound,
+          ...errorsFound
         };
       } else {
         this.errors = { ...this.errors, ...errorsFound };
@@ -117,15 +103,15 @@ export class MvForm extends LitElement {
       this.dispatchEvent(
         new CustomEvent("update-errors", {
           detail: {
-            errors: { ...this.errors },
+            errors: { ...this.errors }
           },
           bubbles: true,
-          composed: true,
+          composed: true
         })
       );
     } else {
       const errorExists = Object.keys(this.errors || {}).some(
-        (key) => key === errorKey
+        key => key === errorKey
       );
       if (errorExists) {
         // remove the existing error
@@ -133,10 +119,10 @@ export class MvForm extends LitElement {
         this.dispatchEvent(
           new CustomEvent("update-errors", {
             detail: {
-              errors: { ...this.errors },
+              errors: { ...this.errors }
             },
             bubbles: true,
-            composed: true,
+            composed: true
           })
         );
       }
@@ -147,34 +133,28 @@ export class MvForm extends LitElement {
     const usesStore = !!this.store;
     if (usesStore) {
       const { state } = this.store;
-      this.errors = validate(this.schema, state, null, null, this.refSchemas);
+      this.errors = validate(this.schema, state);
     } else {
-      this.errors = validate(
-        this.schema,
-        this.formValues,
-        null,
-        null,
-        this.refSchemas
-      );
+      this.errors = validate(this.schema, this.formValues);
     }
     if (this.errors) {
       this.dispatchEvent(
         new CustomEvent("update-errors", {
           detail: {
-            errors: this.errors,
+            errors: this.errors
           },
           bubbles: true,
-          composed: true,
+          composed: true
         })
       );
     } else {
       this.dispatchEvent(
         new CustomEvent("validation-success", {
           detail: {
-            formValues: usesStore ? this.store.state : this.formValues,
+            formValues: usesStore ? this.store.state : this.formValues
           },
           bubbles: true,
-          composed: true,
+          composed: true
         })
       );
     }
@@ -189,7 +169,7 @@ export class MvForm extends LitElement {
         new CustomEvent("update-form", {
           detail: { values: this.formValues },
           bubbles: true,
-          composed: true,
+          composed: true
         })
       );
     }
