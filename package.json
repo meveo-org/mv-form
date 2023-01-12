@@ -1,6 +1,6 @@
 {
   "name": "@meveo-org/mv-form",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MvForm is a Meveo form component (based on lit-element) that provides functionality to create, validate, and submit forms.",
   "main": "index.js",
   "scripts": {
