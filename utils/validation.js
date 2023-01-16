@@ -1,5 +1,5 @@
-import "Ajv";
-import "jsonata";
+import * as ajv from "./dependencies/ajv.min.js";
+import * as jsonata from "./dependencies/jsonata.min.js";
 const validator = new Ajv({ allErrors: true, useDefaults: "empty" });
 
 const mapFieldErrors = (schema, errors) => {
