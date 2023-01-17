@@ -1,5 +1,5 @@
 import { html, css } from "lit";
-import { MvElement } from "mv-element";
+import { MvElement } from "@meveo-org/mv-element";
 import {
   changeField,
   changeGroupField,
