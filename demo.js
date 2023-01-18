@@ -1,5 +1,4 @@
-import { html, css } from "lit";
-import { MvElement } from "@meveo-org/mv-element";
+import { html, css, LitElement } from "lit";
 import {
   changeField,
   changeGroupField,
@@ -13,7 +12,7 @@ import "./mv-form.js";
 import "./mv-form-field.js";
 import "./mv-form-group.js";
 
-import schema from "./model/DemoForm.json";
+import schema from "./model/DemoForm.js";
 
 const EMPTY_LOCATION = {
   streetAddress: "",
@@ -22,7 +21,7 @@ const EMPTY_LOCATION = {
   country: ""
 };
 
-export class MvFormDemo extends MvElement {
+export class MvFormDemo extends LitElement {
   static get properties() {
     return {
       firstName: { type: String, attribute: false },
@@ -107,7 +106,7 @@ export class MvFormDemo extends MvElement {
   render() {
     return html`
       <mv-container>
-        <mv-form .store="${this.store}" .schema="${schema}">
+        <mv-form .schema="${schema}">
           <mv-form-field
             name="firstName"
             label="First name"

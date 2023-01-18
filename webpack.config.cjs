@@ -11,7 +11,7 @@ module.exports = {
   },
   devServer: {
     devMiddleware: {
-      writeToDisk: true,
+      writeToDisk: false,
     },
     client: {
       overlay: false
