@@ -3,19 +3,39 @@ import Ajv from "ajv";
 
 const validator = new Ajv({ allErrors: true, useDefaults: "empty" });
 
+const mapErrorMessage= (error) => {
+  const { 
+    message,
+    params: {
+      missingProperty,
+    } 
+  } = error;
+
+  if (missingProperty) {
+    return "Field required";
+  }
+
+  return message;
+}
+
+const mapErrorKey = (error) => {
+  const { 
+    dataPath,
+    params: {
+      missingProperty,
+    } 
+  } = error;
+
+  return dataPath.slice(1) || missingProperty;
+}
+
 const mapFieldErrors = (schema, errors) => {
   return (errors || []).reduce((allErrors, error) => {
-    const { keyword, dataPath, schemaPath, message } = error;
-    const dataJsonPath = dataPath.slice(1);
-    const schemaJsonPath = schemaPath
-      .replace("#/", "")
-      .replace(`/${keyword}`, "")
-      .replace(/\//g, ".");
-    const property = jsonata(schemaJsonPath).evaluate(schema);
-    const errorMessage = `${property.title} ${message}`;
+    const errorKey = mapErrorKey(error);
+    const errorMessage = mapErrorMessage(error);
     return {
       ...allErrors,
-      [dataJsonPath]: errorMessage,
+      [errorKey]: errorMessage,
     };
   }, {});
 };
