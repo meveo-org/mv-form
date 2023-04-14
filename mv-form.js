@@ -6,7 +6,8 @@ export class MvForm extends LitElement {
     return {
       store: { type: Object, attribute: false, reflect: true },
       schema: { type: Object, attribute: false, reflect: true },
-      formValues: { type: Object, attribute: false, reflect: true }
+      formValues: { type: Object, attribute: false, reflect: true },
+      locale: { type: String, attribute: true, reflect: true }
     };
   }
 
@@ -31,6 +32,7 @@ export class MvForm extends LitElement {
     this.store = null;
     this.schema = null;
     this.formValues = {};
+    this.locale = "en";
   }
 
   render() {
@@ -63,7 +65,8 @@ export class MvForm extends LitElement {
         this.schema,
         this.store.state,
         errorKey,
-        validateGroup
+        validateGroup,
+        this.locale
       );
     } else {
       this.formValues[fieldName] = value;
@@ -78,7 +81,8 @@ export class MvForm extends LitElement {
         this.schema,
         this.formValues,
         errorKey,
-        validateGroup
+        validateGroup,
+        this.locale
       );
     }
 
@@ -133,10 +137,11 @@ export class MvForm extends LitElement {
     const usesStore = !!this.store;
     if (usesStore) {
       const { state } = this.store;
-      this.errors = validate(this.schema, state);
+      this.errors = validate(this.schema, state, null, null, this.locale);
     } else {
-      this.errors = validate(this.schema, this.formValues);
+      this.errors = validate(this.schema, this.formValues, null, null, this.locale);
     }
+
     if (this.errors) {
       this.dispatchEvent(
         new CustomEvent("update-errors", {
@@ -147,6 +152,7 @@ export class MvForm extends LitElement {
           composed: true
         })
       );
+      return false;
     } else {
       this.dispatchEvent(
         new CustomEvent("validation-success", {
@@ -157,6 +163,7 @@ export class MvForm extends LitElement {
           composed: true
         })
       );
+      return true
     }
   };
 

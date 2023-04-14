@@ -1,9 +1,10 @@
 import jsonata from "jsonata";
 import Ajv from "ajv";
+import localize from "ajv-i18n";
 
-const validator = new Ajv({ allErrors: true, useDefaults: "empty" });
+const validator = new Ajv({ allErrors: true, useDefaults: "empty", messages: true });
 
-const mapErrorMessage= (error) => {
+const mapErrorMessage= (error, locale = "en") => {
   const { 
     message,
     params: {
@@ -12,6 +13,9 @@ const mapErrorMessage= (error) => {
   } = error;
 
   if (missingProperty) {
+    if (locale === "fr") {
+      return "Champs requis";
+    }
     return "Field required";
   }
 
@@ -21,18 +25,19 @@ const mapErrorMessage= (error) => {
 const mapErrorKey = (error) => {
   const { 
     dataPath,
+    instancePath,
     params: {
       missingProperty,
     } 
   } = error;
 
-  return dataPath.slice(1) || missingProperty;
+  return dataPath?.slice(1) || missingProperty || instancePath.substr(1);
 }
 
-const mapFieldErrors = (schema, errors) => {
+const mapFieldErrors = (schema, errors, locale = "en") => {
   return (errors || []).reduce((allErrors, error) => {
     const errorKey = mapErrorKey(error);
-    const errorMessage = mapErrorMessage(error);
+    const errorMessage = mapErrorMessage(error, locale);
     return {
       ...allErrors,
       [errorKey]: errorMessage,
@@ -40,9 +45,12 @@ const mapFieldErrors = (schema, errors) => {
   }, {});
 };
 
-export const validate = (schema, state, name, validateGroup) => {
+export const validate = (schema, state, name, validateGroup, locale = "en") => {
   const valid = validator.validate(schema, state);
-  const errors = mapFieldErrors(schema, validator.errors);
+  console.trace(locale)
+  localize[locale](validator.errors);
+
+  const errors = mapFieldErrors(schema, validator.errors, locale);
   if (!valid) {
     if (validateGroup) {
       // fetch all errors for the group

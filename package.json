@@ -19,8 +19,9 @@
   "dependencies": {
     "@meveo-org/mv-input": "^1.0.2",
     "@meveo-org/mv-store": "^1.0.1",
-    "ajv": "^6.11.0",
+    "ajv": "8.10.0",
     "jsonata": "^1.8.5",
+    "ajv-i18n": "^4.2.0",
     "lit": "^2.6.1"
   },
   "devDependencies": {

@@ -30,7 +30,8 @@ export class MvFormDemo extends LitElement {
       remarks: { type: String, attribute: false },
       inlineField1: { type: String, attribute: false },
       inlineField2: { type: String, attribute: false },
-      errors: { type: Object, attribute: false }
+      errors: { type: Object, attribute: false },
+      locale: { type: String, state: true }
     };
   }
 
@@ -103,10 +104,32 @@ export class MvFormDemo extends LitElement {
     };
   }
 
+  constructor() {
+    super();
+    this.locale = "en";
+  }
+
+  updated(changedProperties) {
+    if (changedProperties.get('locale')) {
+      this.shadowRoot.querySelector("mv-form").submitForm();
+    }
+  }
+
+  updateLocale(e) {
+    this.locale = e.target.value;
+  }
+
   render() {
     return html`
       <mv-container>
-        <mv-form .schema="${schema}">
+        <mv-form .schema="${schema}" locale="${this.locale}">
+          <mv-form-field label="Form language">
+            <select slot="field" @change="${this.updateLocale}">
+              <option>en</option>
+              <option>fr</option>
+            </select>
+          </mv-form-field>
+
           <mv-form-field
             name="firstName"
             label="First name"
