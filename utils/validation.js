@@ -47,7 +47,6 @@ const mapFieldErrors = (schema, errors, locale = "en") => {
 
 export const validate = (schema, state, name, validateGroup, locale = "en") => {
   const valid = validator.validate(schema, state);
-  console.trace(locale)
   localize[locale](validator.errors);
 
   const errors = mapFieldErrors(schema, validator.errors, locale);
